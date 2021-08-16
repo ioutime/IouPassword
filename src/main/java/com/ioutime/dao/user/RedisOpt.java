@@ -25,11 +25,21 @@ public class RedisOpt {
     }
 
     /*取出token*/
-    public String verify(String key){
+    public String getToken(String key){
         RedisConnection redisConnection = new RedisConnection();
         Jedis jedis = redisConnection.getRedisConn();
         String token = jedis.get(key);
+        redisConnection.closeRedis(jedis);
         return token;
+    }
+
+    /*删除token*/
+    public Long delValue(String key){
+        RedisConnection redisConnection = new RedisConnection();
+        Jedis jedis = redisConnection.getRedisConn();
+        Long del = jedis.del(key);
+        redisConnection.closeRedis(jedis);
+        return del;
     }
 
 }

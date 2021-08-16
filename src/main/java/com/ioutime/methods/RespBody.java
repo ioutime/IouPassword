@@ -15,7 +15,7 @@ import java.io.PrintWriter;
  */
 
 public class RespBody {
-    public void response(HttpServletResponse resp,String code,String msg,Object data) throws IOException {
+    public static void response(HttpServletResponse resp,String code,String msg,Object data) throws IOException {
         //响应
         resp.setContentType("application/json; charset=utf-8");
         ResultMessage resultMessage = new ResultMessage();
