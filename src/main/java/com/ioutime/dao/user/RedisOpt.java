@@ -1,6 +1,6 @@
 package com.ioutime.dao.user;
 
-import com.ioutime.dao.RedisConnection;
+import com.ioutime.dao.RedisConnPool;
 import redis.clients.jedis.Jedis;
 
 /**
@@ -13,32 +13,32 @@ public class RedisOpt {
 
     /*存储token*/
     public boolean storage(String key,String value){
-        RedisConnection redisConnection = new RedisConnection();
-        Jedis jedis = redisConnection.getRedisConn();
-        String add = redisConnection.add(jedis, key, value);
+        RedisConnPool redisConnPool = new RedisConnPool();
+        Jedis jedis = redisConnPool.getRedisConnection();
+        String add = redisConnPool.add(jedis, key, value);
         boolean flag = false;
         if("OK".equals(add)){
             flag = true;
         }
-        redisConnection.closeRedis(jedis);
+        redisConnPool.closeRedis(jedis);
         return flag;
     }
 
     /*取出token*/
     public String getToken(String key){
-        RedisConnection redisConnection = new RedisConnection();
-        Jedis jedis = redisConnection.getRedisConn();
+        RedisConnPool redisConnPool = new RedisConnPool();
+        Jedis jedis = redisConnPool.getRedisConnection();
         String token = jedis.get(key);
-        redisConnection.closeRedis(jedis);
+        redisConnPool.closeRedis(jedis);
         return token;
     }
 
     /*删除token*/
     public Long delValue(String key){
-        RedisConnection redisConnection = new RedisConnection();
-        Jedis jedis = redisConnection.getRedisConn();
+        RedisConnPool redisConnPool = new RedisConnPool();
+        Jedis jedis = redisConnPool.getRedisConnection();
         Long del = jedis.del(key);
-        redisConnection.closeRedis(jedis);
+        redisConnPool.closeRedis(jedis);
         return del;
     }
 

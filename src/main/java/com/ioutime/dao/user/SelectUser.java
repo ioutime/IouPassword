@@ -1,6 +1,6 @@
 package com.ioutime.dao.user;
 
-import com.ioutime.dao.MysqlConnection;
+import com.ioutime.dao.MySqlDbcpPool;
 import com.ioutime.entity.User;
 
 import java.sql.Connection;
@@ -16,21 +16,20 @@ import java.sql.SQLException;
 public class SelectUser {
     //根据用户名查寻用户
     public User queryUser(String username){
-
-        MysqlConnection mysqlConnection = new MysqlConnection();
+        MySqlDbcpPool dbcpPool = new MySqlDbcpPool();
         Connection connection = null;
-        User user = new User();
         try {
-            connection = mysqlConnection.getConnection();
+            connection = dbcpPool.getMysqlConnection();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        User user = new User();
         String sql = "select * from login_accounts where username = '"+username+"'";
         ResultSet res = null;
         try {
-            res = mysqlConnection.select(connection, sql);
+            res = dbcpPool.select(connection,sql);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -47,6 +46,7 @@ public class SelectUser {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        dbcpPool.closeConnection(connection,null,null);
         return user;
     }
 }

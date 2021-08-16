@@ -1,5 +1,8 @@
 package com.ioutime.dao;
 
+import org.apache.commons.dbcp.BasicDataSourceFactory;
+
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
@@ -8,41 +11,36 @@ import java.util.Properties;
 /**
  * @author ioutime
  * @version 1.0
- * @date 2021/8/15 18:32
+ * @date 2021/8/16 22:31
  */
 
-public class MysqlConnection {
-
-    private static String driver = null;
-    private static String url = null;
-    private static String username = null;
-    private static String password = null;
+public class MySqlDbcpPool {
+    private static DataSource dataSource = null;
 
     static {
         Properties properties = new Properties();
-        InputStream stream = MysqlConnection.class.getClassLoader().getResourceAsStream("db.properties");
+        InputStream stream = MySqlDbcpPool.class.getClassLoader().getResourceAsStream("dbcp.properties");
         try {
             properties.load(stream);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        driver = properties.getProperty("driver");
-        url = properties.getProperty("url");
-        username = properties.getProperty("username");
-        password = properties.getProperty("password");
+        //创建数据源
+        try {
+            dataSource = BasicDataSourceFactory.createDataSource(properties);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    //连接数据库
-    public Connection getConnection() throws ClassNotFoundException, SQLException {
-        Class.forName(driver);
-        Connection connection = DriverManager.getConnection(url+"useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",username,password);
+    //获取连接
+    public  Connection getMysqlConnection() throws ClassNotFoundException, SQLException {
+        Connection connection = dataSource.getConnection();
         return connection;
     }
 
     //查询
-    public ResultSet select(Connection connection, String sql) throws SQLException {
-        if(connection==null) return null;
+    public ResultSet select(Connection connection,String sql) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(sql);
         return resultSet;
@@ -50,7 +48,6 @@ public class MysqlConnection {
 
     //增,删,改
     public int change(Connection connection, String sql) throws SQLException {
-        if(connection==null) return 0;
         Statement statement = connection.createStatement();
         int i = statement.executeUpdate(sql);
         return i;

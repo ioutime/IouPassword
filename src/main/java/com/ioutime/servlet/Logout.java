@@ -30,8 +30,10 @@ public class Logout extends HttpServlet {
         Long value = redisOpt.delValue(username);
         if(value == 0){
             RespBody.response(resp,"200","已注销","");
+            System.out.println("已注销");
         }else {
             RespBody.response(resp,"200","注销成功","");
+            System.out.println("注销成功");
         }
     }
 }
