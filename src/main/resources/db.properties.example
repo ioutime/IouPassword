@@ -1,0 +1,9 @@
+#Mysql
+driver=
+url=
+username=
+password=
+#Redis
+host=
+port=
+auth=
