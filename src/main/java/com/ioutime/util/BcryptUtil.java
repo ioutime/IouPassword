@@ -49,9 +49,4 @@ public class BcryptUtil {
         return plaintext;
     }
 
-//    public static void main(String[] args) {
-//        boolean verify = verify("", "");
-//        System.out.println(verify);
-//
-//    }
 }

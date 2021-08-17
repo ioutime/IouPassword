@@ -36,9 +36,8 @@ public class Login extends HttpServlet {
         SelectUser selectUser = new SelectUser();
         User user = selectUser.queryUser(username);
         //响应
-        RespBody respBody = new RespBody();
         if(user == null){
-            respBody.response(resp,"400","用户不存在","");
+            RespBody.response(resp,"400","用户不存在","");
             System.out.println("用户不存在");
         }else{
             String dbPassword = user.getPassword();
@@ -59,10 +58,10 @@ public class Login extends HttpServlet {
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-                respBody.response(resp,"200","登录成功",user.getUsername());
+                RespBody.response(resp,"200","登录成功",user.getUsername());
                 System.out.println("登录成功");
             }else{
-                respBody.response(resp,"400","密码错误","");
+                RespBody.response(resp,"400","密码错误","");
                 System.out.println("登录失败");
             }
         }
