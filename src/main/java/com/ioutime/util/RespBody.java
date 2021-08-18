@@ -1,9 +1,7 @@
-package com.ioutime.methods;
+package com.ioutime.util;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ioutime.entity.User;
 import com.ioutime.result.ResultMessage;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;

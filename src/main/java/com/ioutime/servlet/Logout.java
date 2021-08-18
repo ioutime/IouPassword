@@ -2,8 +2,8 @@ package com.ioutime.servlet;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ioutime.dao.user.RedisOpt;
-import com.ioutime.methods.ReqBody;
-import com.ioutime.methods.RespBody;
+import com.ioutime.util.ReqBody;
+import com.ioutime.util.RespBody;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

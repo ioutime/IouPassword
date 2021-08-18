@@ -3,10 +3,10 @@ package com.ioutime.servlet;
 import com.alibaba.fastjson.JSONObject;
 import com.ioutime.dao.date.OptTables;
 import com.ioutime.dao.user.RedisOpt;
-import com.ioutime.dao.user.SelectUser;
+import com.ioutime.dao.user.Select;
 import com.ioutime.entity.User;
-import com.ioutime.methods.ReqBody;
-import com.ioutime.methods.RespBody;
+import com.ioutime.util.ReqBody;
+import com.ioutime.util.RespBody;
 import com.ioutime.util.BcryptUtil;
 import com.ioutime.util.JwtUtil;
 
@@ -33,8 +33,8 @@ public class Login extends HttpServlet {
         String password = (String) jsonObject.get("password");
 
         //数据库处理,查询
-        SelectUser selectUser = new SelectUser();
-        User user = selectUser.queryUser(username);
+        Select select = new Select();
+        User user = select.queryUser(username);
         //响应
         if(user == null){
             RespBody.response(resp,"400","用户不存在","");

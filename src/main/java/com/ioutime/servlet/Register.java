@@ -2,10 +2,10 @@ package com.ioutime.servlet;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ioutime.dao.MySqlDbcpPool;
-import com.ioutime.dao.user.SelectUser;
+import com.ioutime.dao.user.Select;
 import com.ioutime.entity.User;
-import com.ioutime.methods.ReqBody;
-import com.ioutime.methods.RespBody;
+import com.ioutime.util.ReqBody;
+import com.ioutime.util.RespBody;
 import com.ioutime.util.BcryptUtil;
 
 import javax.servlet.ServletException;
@@ -31,8 +31,8 @@ public class Register extends HttpServlet {
         String username =(String) jsonObject.get("username");
         String password = (String) jsonObject.get("password");
         /*数据库处理*/
-        SelectUser selectUser = new SelectUser();
-        User user = selectUser.queryUser(username);
+        Select select = new Select();
+        User user = select.queryUser(username);
         if(user != null){
             RespBody.response(resp,"400","用户名重复","");
             System.out.println("用户名重复");
