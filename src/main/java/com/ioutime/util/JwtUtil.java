@@ -4,9 +4,13 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,15 +25,16 @@ public class JwtUtil {
     /**
      *生成token
      */
-    public String jwtgetToken(String name,Integer uid) {
+    public String jwtgetToken(HashMap<String,String> hashMap) {
         Calendar instance = Calendar.getInstance();
-        instance.add(Calendar.DATE,1);//默认过期时间1天
-
+        instance.add(Calendar.HOUR,1);//默认过期时间1天
         //创建jwt builder
         JWTCreator.Builder builder = JWT.create();
         //header 默认可以不写
         //payload
-        builder.withClaim(name, uid);
+        for (Map.Entry<String, String> entry : hashMap.entrySet()) {
+            builder.withClaim(entry.getKey(),entry.getValue());
+        }
         //生成token
         String token = builder.withExpiresAt(instance.getTime())
                 .sign(Algorithm.HMAC256(SIGN));
@@ -49,4 +54,25 @@ public class JwtUtil {
             return false;
         }
     }
+
+    public  DecodedJWT  getInfo(String token){
+        DecodedJWT jwt = null;
+        try {
+            // 使用了HMAC256加密算法。
+            // mysecret是用来加密数字签名的密钥。
+            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(SIGN)).build();// Reusable
+            // verifier
+            // instance
+            jwt = verifier.verify(token);
+        } catch (JWTVerificationException exception) {
+            // Invalid signature/claims
+            exception.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return jwt;
+    }
+
+
 }

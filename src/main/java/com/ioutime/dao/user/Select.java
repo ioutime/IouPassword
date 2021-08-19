@@ -29,10 +29,11 @@ public class Select {
             e.printStackTrace();
         }
         User user = new User();
-        String sql = "select * from login_accounts where username = '"+username+"'";
+        Object[] params = {username};
+        String sql = "select * from login_accounts where username = ?";
         ResultSet res = null;
         try {
-            res = dbcpPool.select(connection,sql);
+            res = dbcpPool.select(connection,sql,params);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -56,8 +57,9 @@ public class Select {
     public List<UserMsg> queryMsg(String notes, String table_name) throws SQLException, ClassNotFoundException {
         MySqlDbcpPool dbcpPool = new MySqlDbcpPool();
         Connection connection = dbcpPool.getMysqlConnection();
-        String sql = "SELECT * FROM "+table_name+" WHERE notes LIKE '%"+notes+"%'";
-        ResultSet resultSet = dbcpPool.select(connection, sql);
+        String sql = "SELECT * FROM "+table_name+" WHERE notes LIKE ?";
+        Object[] params = {notes};
+        ResultSet resultSet = dbcpPool.select(connection,sql,params);
         ArrayList<UserMsg> list = new ArrayList<>();
         while (resultSet.next()){
             int id = resultSet.getInt("id");

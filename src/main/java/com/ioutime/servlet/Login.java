@@ -1,7 +1,6 @@
 package com.ioutime.servlet;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ioutime.dao.date.OptTables;
 import com.ioutime.dao.user.RedisOpt;
 import com.ioutime.dao.user.Select;
 import com.ioutime.entity.User;
@@ -9,13 +8,11 @@ import com.ioutime.util.ReqBody;
 import com.ioutime.util.RespBody;
 import com.ioutime.util.BcryptUtil;
 import com.ioutime.util.JwtUtil;
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
+import java.util.HashMap;
 
 /**
  * @author ioutime
@@ -25,7 +22,7 @@ import java.sql.SQLException;
 
 public class Login extends HttpServlet {
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         //获取json
         ReqBody reqBody = new ReqBody();
         JSONObject jsonObject = reqBody.getBody(req);
@@ -46,19 +43,11 @@ public class Login extends HttpServlet {
                 RedisOpt redisOpt = new RedisOpt();
                 JwtUtil jwtUtil = new JwtUtil();
                 /*生成token*/
-                String token = jwtUtil.jwtgetToken(user.getUsername(), user.getUid());
-                /*存储token*/
-                redisOpt.storage(user.getUsername(),token);
-                /*判断是否有该用户数据*/
-                OptTables optTables = new OptTables();
-                try {
-                    optTables.creatTable(user.getUsername());
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-                RespBody.response(resp,"200","登录成功",user.getUsername());
+                HashMap<String, String> map = new HashMap<>();
+                map.put("uid",user.getUid().toString());
+                map.put("username",user.getUsername());
+                String token = jwtUtil.jwtgetToken(map);
+                RespBody.response(resp,"200","登录成功",token);
                 System.out.println("登录成功");
             }else{
                 RespBody.response(resp,"400","密码错误","");

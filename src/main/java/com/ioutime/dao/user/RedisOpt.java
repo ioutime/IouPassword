@@ -11,29 +11,16 @@ import redis.clients.jedis.Jedis;
 
 public class RedisOpt {
 
-    /*存储token*/
-    public boolean storage(String key,String value){
+    /*存储tokenId*/
+    public boolean storage(String value){
         RedisConnPool redisConnPool = new RedisConnPool();
         Jedis jedis = redisConnPool.getRedisConnection();
-        String add = redisConnPool.add(jedis, key, value);
-        boolean flag = false;
-        if("OK".equals(add)){
-            flag = true;
-        }
+        boolean add = redisConnPool.add(jedis, value);
         redisConnPool.closeRedis(jedis);
-        return flag;
+        return add;
     }
 
-    /*取出token*/
-    public String getToken(String key){
-        RedisConnPool redisConnPool = new RedisConnPool();
-        Jedis jedis = redisConnPool.getRedisConnection();
-        String token = jedis.get(key);
-        redisConnPool.closeRedis(jedis);
-        return token;
-    }
-
-    /*删除token*/
+    /*删除tokenId*/
     public Long delValue(String key){
         RedisConnPool redisConnPool = new RedisConnPool();
         Jedis jedis = redisConnPool.getRedisConnection();

@@ -38,7 +38,7 @@ public class AddMessage extends HttpServlet {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        String sql = "insert into "+table_name+"(notes,msg) values ( '"+notes+"','"+msg+"')";
+        String sql = "insert into "+table_name+"(notes,msg) values ( ?,?)";
         try {
             int change = dbcpPool.change(connection, sql);
             if(change != 0){

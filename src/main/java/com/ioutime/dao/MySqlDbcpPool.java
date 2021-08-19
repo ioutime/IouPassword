@@ -40,9 +40,16 @@ public class MySqlDbcpPool {
     }
 
     //查询
-    public ResultSet select(Connection connection,String sql) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(sql);
+    public ResultSet select(Connection connection,String sql,Object[] params) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        for (int i = 1; i <= params.length; i++) {
+            try{
+                preparedStatement.setObject(i,params[i-1]);
+            }catch (SQLException e){
+                return null;
+            }
+        }
+        ResultSet resultSet = preparedStatement.executeQuery();
         return resultSet;
     }
 
@@ -56,7 +63,7 @@ public class MySqlDbcpPool {
 
 
     //关闭连接
-    public boolean closeConnection(Connection connection,Statement statement,ResultSet resultSet){
+    public boolean closeConnection(Connection connection,PreparedStatement preparedStatement,ResultSet resultSet){
         boolean flag = true;
         if(resultSet!=null){
             try {
@@ -67,12 +74,12 @@ public class MySqlDbcpPool {
                 flag = false;
             }
         }
-        if(statement!=null){
+        if(preparedStatement!=null){
             try {
-                statement.close();
+                preparedStatement.close();
             } catch (SQLException e) {
                 e.printStackTrace();
-                statement = null;
+                preparedStatement = null;
                 flag = false;
             }
         }

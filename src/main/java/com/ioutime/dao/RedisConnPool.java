@@ -1,11 +1,8 @@
 package com.ioutime.dao;
 
-import org.apache.commons.dbcp.BasicDataSourceFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.JedisSentinelPool;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -40,37 +37,34 @@ public class RedisConnPool {
     /*连接*/
     public Jedis getRedisConnection(){
         Jedis jedis = jedisPool.getResource();
+        jedis.select(1);
         return jedis;
     }
 
     /*查询*/
-    public String keys(Jedis jedis,String key){
-        Boolean is = jedis.exists(key);
-        String value = "Don't Have";
-        if(is){
-            value = jedis.get(key);
-        }
-        return value;
+    public boolean keys(Jedis jedis,String key){
+        Boolean tokenId = jedis.sismember("tokenId", key);
+        return tokenId;
     }
 
     /*添加*/
-    public String add(Jedis jedis,String key,String value){
-        Boolean is = jedis.exists(key);
-        String s = "False";
-        if(!is){
-            s = jedis.set(key, value);
+    public boolean add(Jedis jedis,String value){
+        Long id = jedis.sadd("tokenId", value);
+        if(id != 0){
+            return true;
+        }else {
+            return false;
         }
-        return s;
     }
 
     /*删除*/
-    public Long del(Jedis jedis,String key){
-        Boolean is = jedis.exists(key);
-        Long del = -1L;
-        if(is){
-            del = jedis.del(key);
+    public boolean del(Jedis jedis,String value){
+        Long id = jedis.srem("tokenId", value);
+        if(id != 0){
+            return true;
+        }else {
+            return false;
         }
-        return del;
     }
 
 
