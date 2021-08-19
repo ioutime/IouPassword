@@ -43,13 +43,13 @@ public class Register extends HttpServlet {
                     RespBody.response(resp,"200","注册成功",username);
                     System.out.println("注册成功");
                 }else{
-                    RespBody.response(resp,"400","注册成败","");
-                    System.out.println("注册成败");
+                    RespBody.response(resp,"400","注册失败","");
+                    System.out.println("注册失败");
                 }
             } catch (SQLException | ClassNotFoundException e) {
                 e.printStackTrace();
-                RespBody.response(resp,"400","注册成败","");
-                System.out.println("注册成败");
+                RespBody.response(resp,"400","注册失败","");
+                System.out.println("注册失败");
             }
         }
 

@@ -28,8 +28,8 @@ public class AddMessage extends HttpServlet {
         String notes = body.getString("notes");
         String msg = body.getString("msg");
         int uid  = JwtUtil.getInfo(token);
-        if(uid == 0) {
-            RespBody.response(resp,"400","添加失败","");
+        if(uid == -1) {
+            RespBody.response(resp,"400","身份认证失败","");
         }else{
             OtherOpt otherOpt = new OtherOpt();
             Object[] params  ={uid,notes,msg};

@@ -28,20 +28,25 @@ public class DelMessage extends HttpServlet {
         int id = body.getInteger("id");
         String token = body.getString("token");
         int uid = JwtUtil.getInfo(token);
-        OtherOpt otherOpt = new OtherOpt();
-        try {
-            boolean delete = otherOpt.delete(id,uid);
-            if(delete){
-                RespBody.response(resp,"200","删除成功","");
-                System.out.println("删除成功");
-            }else {
+        if(uid == -1){
+            RespBody.response(resp,"400","身份认证失败","");
+        }else {
+            OtherOpt otherOpt = new OtherOpt();
+            try {
+                boolean delete = otherOpt.delete(id,uid);
+                if(delete){
+                    RespBody.response(resp,"200","删除成功","");
+                    System.out.println("删除成功");
+                }else {
+                    RespBody.response(resp,"400","删除失败","");
+                    System.out.println("删除失败");
+                }
+            } catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace();
                 RespBody.response(resp,"400","删除失败","");
                 System.out.println("删除失败");
             }
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-            RespBody.response(resp,"400","删除失败","");
-            System.out.println("删除失败");
         }
+
     }
 }

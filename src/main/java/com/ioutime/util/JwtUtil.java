@@ -45,7 +45,7 @@ public class JwtUtil {
     /**
      *验证token
      */
-    public boolean verifys(String token) {
+    public static boolean verifys(String token) {
         try {
             JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(SIGN)).build();
             DecodedJWT verify = jwtVerifier.verify(token);
@@ -65,7 +65,7 @@ public class JwtUtil {
             int uid = Integer.parseInt(s);
             return uid;
         }catch (Throwable e){
-            return 0;
+            return -1;
         }
     }
 

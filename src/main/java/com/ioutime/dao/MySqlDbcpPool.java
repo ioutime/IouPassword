@@ -54,7 +54,7 @@ public class MySqlDbcpPool {
         for (int i = 1; i <= params.length; i++) {
             preparedStatement.setObject(i,params[i-1]);
         }
-        int i = preparedStatement.executeUpdate(sql);
+        int i = preparedStatement.executeUpdate();
         closeConnection(connection,preparedStatement,null);
         return i;
     }

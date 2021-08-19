@@ -18,7 +18,7 @@ public class OtherOpt {
     public boolean addUser(String username,String password) throws SQLException, ClassNotFoundException {
         MySqlDbcpPool dbcpPool = new MySqlDbcpPool();
         Connection connection = dbcpPool.getMysqlConnection();
-        String sql = "insert into login_accounts (username,password) values (?,?)";
+        String sql = "insert into login_accounts (username,password) values ( ? , ? )";
         Object[] params = { username, password};
         int i = dbcpPool.change(connection, sql, params);
         return i != 0;

@@ -23,8 +23,8 @@ public class ReqBody {
             result +=(char)respInt;
             respInt = input.read();
         }
-        input.close();
         JSONObject jsonObject = JSONObject.parseObject(result);
+        input.close();
         return jsonObject;
     }
 
