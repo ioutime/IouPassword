@@ -1,5 +1,6 @@
 package com.ioutime.dao;
 
+import com.ioutime.util.StartThread;
 import org.apache.commons.dbcp.BasicDataSourceFactory;
 
 import javax.sql.DataSource;
@@ -35,43 +36,38 @@ public class MySqlDbcpPool {
 
     //获取连接
     public  Connection getMysqlConnection() throws ClassNotFoundException, SQLException {
-        Connection connection = dataSource.getConnection();
-        return connection;
+        return dataSource.getConnection();
     }
 
     //查询
     public ResultSet select(Connection connection,String sql,Object[] params) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         for (int i = 1; i <= params.length; i++) {
-            try{
-                preparedStatement.setObject(i,params[i-1]);
-            }catch (SQLException e){
-                return null;
-            }
+            preparedStatement.setObject(i,params[i-1]);
         }
-        ResultSet resultSet = preparedStatement.executeQuery();
-        return resultSet;
+        return preparedStatement.executeQuery();
     }
 
     //增,删,改
-    public int change(Connection connection, String sql) throws SQLException {
-        Statement statement = connection.createStatement();
-        int i = statement.executeUpdate(sql);
+    public int change(Connection connection, String sql,Object[] params) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        for (int i = 1; i <= params.length; i++) {
+            preparedStatement.setObject(i,params[i-1]);
+        }
+        int i = preparedStatement.executeUpdate(sql);
+        closeConnection(connection,preparedStatement,null);
         return i;
     }
 
 
 
     //关闭连接
-    public boolean closeConnection(Connection connection,PreparedStatement preparedStatement,ResultSet resultSet){
-        boolean flag = true;
+    public void closeConnection(Connection connection, PreparedStatement preparedStatement, ResultSet resultSet){
         if(resultSet!=null){
             try {
                 resultSet.close();
             } catch (SQLException e) {
                 e.printStackTrace();
-                resultSet = null;
-                flag = false;
             }
         }
         if(preparedStatement!=null){
@@ -79,8 +75,6 @@ public class MySqlDbcpPool {
                 preparedStatement.close();
             } catch (SQLException e) {
                 e.printStackTrace();
-                preparedStatement = null;
-                flag = false;
             }
         }
         if(connection!=null){
@@ -88,11 +82,8 @@ public class MySqlDbcpPool {
                 connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
-                connection = null;
-                flag = false;
             }
         }
-        return flag;
     }
 
 }

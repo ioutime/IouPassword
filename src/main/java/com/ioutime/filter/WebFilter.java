@@ -10,7 +10,7 @@ import java.io.IOException;
  */
 
 public class WebFilter implements Filter {
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
 
     }
 

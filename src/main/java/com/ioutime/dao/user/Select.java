@@ -23,9 +23,7 @@ public class Select {
         Connection connection = null;
         try {
             connection = dbcpPool.getMysqlConnection();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
         User user = new User();
@@ -33,12 +31,14 @@ public class Select {
         String sql = "select * from login_accounts where username = ?";
         ResultSet res = null;
         try {
+            assert connection != null;
             res = dbcpPool.select(connection,sql,params);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         try {
-            if(res.next() == false){
+            assert res != null;
+            if(!res.next()){
                 return null;
             }else {
                 String password = res.getString("password");
@@ -54,11 +54,11 @@ public class Select {
         return user;
     }
 
-    public List<UserMsg> queryMsg(String notes, String table_name) throws SQLException, ClassNotFoundException {
+    public List<UserMsg> queryMsg(int uid,String notes) throws SQLException, ClassNotFoundException {
         MySqlDbcpPool dbcpPool = new MySqlDbcpPool();
         Connection connection = dbcpPool.getMysqlConnection();
-        String sql = "SELECT * FROM "+table_name+" WHERE notes LIKE ?";
-        Object[] params = {notes};
+        String sql = "SELECT * FROM message WHERE uid = ? AND notes LIKE ?";
+        Object[] params = {uid,"%"+notes+"%"};
         ResultSet resultSet = dbcpPool.select(connection,sql,params);
         ArrayList<UserMsg> list = new ArrayList<>();
         while (resultSet.next()){

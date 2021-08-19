@@ -18,21 +18,18 @@ public class BcryptUtil {
         //生成随机盐
         String gensalt = BCrypt.gensalt();
         //加密
-        String encodePassword = BCrypt.hashpw(password, gensalt);
-        return encodePassword;
+        return BCrypt.hashpw(password, gensalt);
     }
 
     /**
      * 验证密码
      */
     public static boolean verify(String plaintext,String ciphertext){
-        boolean checkpw = BCrypt.checkpw(plaintext, ciphertext);
-        return checkpw;
+        return BCrypt.checkpw(plaintext, ciphertext);
     }
 
     /**
      * 生成8位随机密码
-     * @return
      */
     public static String charArray(){
         int i = 1234567890;
@@ -41,12 +38,12 @@ public class BcryptUtil {
         String word=s+S+i;
         char[] c=word.toCharArray();
         Random rd = new Random();
-        String plaintext ="";
+        StringBuilder plaintext = new StringBuilder();
         for (int k = 0; k <= 7; k++) {
             int index = rd.nextInt(c.length);//随机获取数组长度作为索引
-            plaintext +=c[index];//循环添加到字符串后面
+            plaintext.append(c[index]);//循环添加到字符串后面
         }
-        return plaintext;
+        return plaintext.toString();
     }
 
 }

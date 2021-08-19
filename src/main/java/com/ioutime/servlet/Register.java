@@ -1,19 +1,17 @@
 package com.ioutime.servlet;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ioutime.dao.MySqlDbcpPool;
+import com.ioutime.dao.user.OtherOpt;
 import com.ioutime.dao.user.Select;
 import com.ioutime.entity.User;
+import com.ioutime.util.BcryptUtil;
 import com.ioutime.util.ReqBody;
 import com.ioutime.util.RespBody;
-import com.ioutime.util.BcryptUtil;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
@@ -24,7 +22,7 @@ import java.sql.SQLException;
 
 public class Register extends HttpServlet {
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         /*获取数据*/
         ReqBody reqBody = new ReqBody();
         JSONObject jsonObject = reqBody.getBody(req);
@@ -38,31 +36,20 @@ public class Register extends HttpServlet {
             System.out.println("用户名重复");
         }
         else{
-            /*添加用户*/
-            MySqlDbcpPool dbcpPool = new MySqlDbcpPool();
-            Connection connection = null;
+            OtherOpt otherOpt = new OtherOpt();
             try {
-                connection = dbcpPool.getMysqlConnection();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            String sql = "insert into login_accounts (username,password) values"+
-                    "( '"+username+"', '"+BcryptUtil.ciphertext(password)+"')";
-
-            try {
-                int i = dbcpPool.change(connection, sql);
-                dbcpPool.closeConnection(connection, null, null);
-                if(i !=0 ){
+                boolean i = otherOpt.addUser(username, BcryptUtil.ciphertext(password));
+                if(i){
                     RespBody.response(resp,"200","注册成功",username);
                     System.out.println("注册成功");
                 }else{
                     RespBody.response(resp,"400","注册成败","");
                     System.out.println("注册成败");
                 }
-            } catch (SQLException e) {
+            } catch (SQLException | ClassNotFoundException e) {
                 e.printStackTrace();
+                RespBody.response(resp,"400","注册成败","");
+                System.out.println("注册成败");
             }
         }
 

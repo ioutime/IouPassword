@@ -45,7 +45,7 @@ public class JwtUtil {
     /**
      *验证token
      */
-    public boolean verify(String token) {
+    public boolean verifys(String token) {
         try {
             JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(SIGN)).build();
             DecodedJWT verify = jwtVerifier.verify(token);
@@ -55,24 +55,18 @@ public class JwtUtil {
         }
     }
 
-    public  DecodedJWT  getInfo(String token){
-        DecodedJWT jwt = null;
-        try {
-            // 使用了HMAC256加密算法。
-            // mysecret是用来加密数字签名的密钥。
-            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(SIGN)).build();// Reusable
-            // verifier
-            // instance
-            jwt = verifier.verify(token);
-        } catch (JWTVerificationException exception) {
-            // Invalid signature/claims
-            exception.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+    /*解析*/
+    public static int getInfo(String token){
+        try{
+            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(SIGN)).build();
+            DecodedJWT jwt = jwtVerifier.verify(token);
+            Claim claim = jwt.getClaim("uid");
+            String s = claim.asString();
+            int uid = Integer.parseInt(s);
+            return uid;
+        }catch (Throwable e){
+            return 0;
         }
-        return jwt;
     }
-
 
 }

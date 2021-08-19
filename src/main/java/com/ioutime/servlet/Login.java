@@ -1,13 +1,10 @@
 package com.ioutime.servlet;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ioutime.dao.user.RedisOpt;
 import com.ioutime.dao.user.Select;
 import com.ioutime.entity.User;
-import com.ioutime.util.ReqBody;
-import com.ioutime.util.RespBody;
-import com.ioutime.util.BcryptUtil;
-import com.ioutime.util.JwtUtil;
+import com.ioutime.util.*;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +18,7 @@ import java.util.HashMap;
  */
 
 public class Login extends HttpServlet {
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         //获取json
@@ -40,7 +38,6 @@ public class Login extends HttpServlet {
             String dbPassword = user.getPassword();
             /*验证密码*/
             if(BcryptUtil.verify(password, dbPassword)){
-                RedisOpt redisOpt = new RedisOpt();
                 JwtUtil jwtUtil = new JwtUtil();
                 /*生成token*/
                 HashMap<String, String> map = new HashMap<>();
