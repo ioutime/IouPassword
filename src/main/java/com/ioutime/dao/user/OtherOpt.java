@@ -18,25 +18,35 @@ public class OtherOpt {
     public boolean addUser(String username,String password) throws SQLException, ClassNotFoundException {
         MySqlDbcpPool dbcpPool = new MySqlDbcpPool();
         Connection connection = dbcpPool.getMysqlConnection();
-        String sql = "insert into login_accounts (username,password) values ( ? , ? )";
-        Object[] params = { username, password};
-        int i = dbcpPool.change(connection, sql, params);
-        return i != 0;
+        try {
+            String sql = "insert into login_accounts (username,password) values ( ? , ? )";
+            Object[] params = { username, password};
+            int i = dbcpPool.change(connection, sql, params);
+            return i != 0;
+        }finally {
+            dbcpPool.closeConnection(connection,null,null);
+        }
+
     }
 
     /*增*/
     public boolean add(Object[] params) throws SQLException, ClassNotFoundException {
-
         MySqlDbcpPool dbcpPool = new MySqlDbcpPool();
         Connection connection = dbcpPool.getMysqlConnection();
-        String sql = "insert into message (uid,notes,msg) values (?,?,?)";
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setInt(1,(int) params[0]);
-        preparedStatement.setObject(2,params[1]);
-        preparedStatement.setObject(3,params[2]);
-        int i = preparedStatement.executeUpdate();
-        dbcpPool.closeConnection(connection,preparedStatement,null);
-        return i != 0;
+        PreparedStatement preparedStatement = null;
+        try{
+            String sql = "insert into message (uid,notes,msg) values (?,?,?)";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,(int) params[0]);
+            preparedStatement.setObject(2,params[1]);
+            preparedStatement.setObject(3,params[2]);
+            int i = preparedStatement.executeUpdate();
+            return i != 0;
+        }finally {
+            dbcpPool.closeConnection(connection,preparedStatement,null);
+        }
+
+
     }
 
     /*删*/

@@ -22,9 +22,8 @@ public class Login extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         //获取json
-        ReqBody reqBody = new ReqBody();
-        JSONObject jsonObject = reqBody.getBody(req);
-        String username =(String) jsonObject.get("name");
+        JSONObject jsonObject = new ReqBody().getBody(req);
+        String username =(String) jsonObject.get("username");
         String password = (String) jsonObject.get("password");
 
         //数据库处理,查询
@@ -37,6 +36,8 @@ public class Login extends HttpServlet {
         }else{
             String dbPassword = user.getPassword();
             /*验证密码*/
+            System.out.println(password);
+            System.out.println(dbPassword);
             if(BcryptUtil.verify(password, dbPassword)){
                 JwtUtil jwtUtil = new JwtUtil();
                 /*生成token*/

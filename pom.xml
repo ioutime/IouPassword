@@ -35,7 +35,7 @@
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
-      <version>8.0.23</version>
+      <version>8.0.26</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet.jsp.jstl</groupId>
@@ -87,6 +87,11 @@
       <artifactId>commons-pool</artifactId>
       <version>1.6</version>
     </dependency>
+      <dependency>
+          <groupId>org.apache.httpcomponents</groupId>
+          <artifactId>httpcore</artifactId>
+          <version>4.4.14</version>
+      </dependency>
   </dependencies>
 
 

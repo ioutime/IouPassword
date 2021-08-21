@@ -1,8 +1,10 @@
 package com.ioutime.servlet;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ioutime.dao.user.Select;
 import com.ioutime.entity.UserMsg;
 import com.ioutime.util.JwtUtil;
+import com.ioutime.util.ReqBody;
 import com.ioutime.util.RespBody;
 
 import javax.servlet.http.HttpServlet;
@@ -20,24 +22,26 @@ import java.util.List;
 
 public class SelectMessage extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String token = req.getParameter("token");
-        String notes = req.getParameter("notes");
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        JSONObject jsonObject = new ReqBody().getBody(req);
+        String token = (String) jsonObject.get("token");
+        String notes = (String) jsonObject.get("notes");
         int uid = JwtUtil.getInfo(token);
-        /*数据库处理*/
-        Select select = new Select();
-        List<UserMsg> list = null;
-        try {
-            list = select.queryMsg(uid,notes);
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        assert list != null;
-        if(list.isEmpty()){
-            RespBody.response(resp,"400","没查到","");
+        if(uid == -1){
+            RespBody.response(resp,"400","身份认证失败","");
         }else {
-            RespBody.response(resp,"200","查询成功",list);
+            /*数据库处理*/
+            Select select = new Select();
+            JSONObject jsonObject1 = new JSONObject();
+            try {
+                jsonObject1 = select.queryMsg(uid,notes);
+            } catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            RespBody.response(resp,"200","查询成功",jsonObject1);
+
         }
+
 
     }
 }

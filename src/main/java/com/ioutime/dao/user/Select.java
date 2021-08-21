@@ -1,5 +1,6 @@
 package com.ioutime.dao.user;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ioutime.dao.MySqlDbcpPool;
 import com.ioutime.entity.User;
 import com.ioutime.entity.UserMsg;
@@ -7,8 +8,6 @@ import com.ioutime.entity.UserMsg;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author ioutime
@@ -21,58 +20,72 @@ public class Select {
     public User queryUser(String username){
         MySqlDbcpPool dbcpPool = new MySqlDbcpPool();
         Connection connection = null;
-        try {
-            connection = dbcpPool.getMysqlConnection();
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
-        User user = new User();
-        Object[] params = {username};
-        String sql = "select * from login_accounts where username = ?";
-        ResultSet res = null;
-        try {
-            assert connection != null;
-            res = dbcpPool.select(connection,sql,params);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
-            assert res != null;
-            if(!res.next()){
-                return null;
-            }else {
-                String password = res.getString("password");
-                user.setPassword(password);
-                user.setUid(res.getInt("uid"));
-                user.setUsername(res.getString("username"));
+        try{
+            try {
+                connection = dbcpPool.getMysqlConnection();
+            } catch (ClassNotFoundException | SQLException e) {
+                e.printStackTrace();
+            }
+            User user = new User();
+            Object[] params = {username};
+            String sql = "select * from login_accounts where username = ?";
+            ResultSet res = null;
+            try {
+                assert connection != null;
+                res = dbcpPool.select(connection,sql,params);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                assert res != null;
+                if(!res.next()){
+                    return null;
+                }else {
+                    String password = res.getString("password");
+                    user.setPassword(password);
+                    user.setUid(res.getInt("uid"));
+                    user.setUsername(res.getString("username"));
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return user;
+        }finally {
+            dbcpPool.closeConnection(connection,null,null);
         }
-        dbcpPool.closeConnection(connection,null,null);
-        return user;
+
     }
 
-    public List<UserMsg> queryMsg(int uid,String notes) throws SQLException, ClassNotFoundException {
+    public JSONObject queryMsg(int uid, String notes) throws SQLException, ClassNotFoundException {
         MySqlDbcpPool dbcpPool = new MySqlDbcpPool();
         Connection connection = dbcpPool.getMysqlConnection();
-        String sql = "SELECT * FROM message WHERE uid = ? AND notes LIKE ?";
-        Object[] params = {uid,"%"+notes+"%"};
-        ResultSet resultSet = dbcpPool.select(connection,sql,params);
-        ArrayList<UserMsg> list = new ArrayList<>();
-        while (resultSet.next()){
-            int id = resultSet.getInt("id");
-            String notes1  = resultSet.getString("notes");
-            String msg = resultSet.getString("msg");
-            UserMsg userMsg = new UserMsg();
-            userMsg.setId(id);
-            userMsg.setNotes(notes1);
-            userMsg.setMsg(msg);
-            list.add(userMsg);
+        ResultSet resultSet = null;
+        try{
+            String sql = "SELECT * FROM message WHERE uid = ? AND notes LIKE ?";
+            Object[] params = {uid,"%"+notes+"%"};
+            resultSet = dbcpPool.select(connection,sql,params);
+            JSONObject jsonObject = new JSONObject();
+            int i = 1;
+            while (resultSet.next()){
+                int id = resultSet.getInt("id");
+                String notes1  = resultSet.getString("notes");
+                String msg = resultSet.getString("msg");
+                UserMsg userMsg = new UserMsg();
+                userMsg.setId(id);
+                userMsg.setNotes(notes1);
+                userMsg.setMsg(msg);
+                String s = String.valueOf(i);
+                jsonObject.put(s,userMsg);
+                i++;
+            }
+            jsonObject.put("nums",String.valueOf(i-1));
+            return jsonObject;
+        }finally {
+            dbcpPool.closeConnection(connection,null,resultSet);
         }
-        dbcpPool.closeConnection(connection,null,resultSet);
-        return list;
+
     }
 
 

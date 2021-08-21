@@ -50,13 +50,18 @@ public class MySqlDbcpPool {
 
     //增,删,改
     public int change(Connection connection, String sql,Object[] params) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        for (int i = 1; i <= params.length; i++) {
-            preparedStatement.setObject(i,params[i-1]);
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = connection.prepareStatement(sql);
+            for (int i = 1; i <= params.length; i++) {
+                preparedStatement.setObject(i,params[i-1]);
+            }
+            int i = preparedStatement.executeUpdate();
+            return i;
+        }finally {
+            closeConnection(connection,preparedStatement,null);
         }
-        int i = preparedStatement.executeUpdate();
-        closeConnection(connection,preparedStatement,null);
-        return i;
+
     }
 
 
