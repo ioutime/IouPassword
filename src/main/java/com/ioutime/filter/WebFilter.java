@@ -33,6 +33,7 @@ public class WebFilter implements Filter {
         response.setCharacterEncoding("UTF-8");
         String method = request.getMethod();
         String uri = request.getRequestURI();
+//        System.out.println(method+"\n"+uri);
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "POST,GET,PUT,DELETE,OPTIONS");
         response.addHeader("Access-Control-Allow-Headers", "*");

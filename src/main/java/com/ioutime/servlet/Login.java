@@ -36,8 +36,6 @@ public class Login extends HttpServlet {
         }else{
             String dbPassword = user.getPassword();
             /*验证密码*/
-            System.out.println(password);
-            System.out.println(dbPassword);
             if(BcryptUtil.verify(password, dbPassword)){
                 JwtUtil jwtUtil = new JwtUtil();
                 /*生成token*/
