@@ -10,4 +10,5 @@
 3. 使用maven作为包管理器
 4. 使用MySQL连接池dbcp，管理数据库连接
 
-前端使用的Java编写的控制台小程序（见另一个分支）
+前端使用的[Java编写的控制台小程序](https://github.com/ioutime/ioupasswd-consoleApp)
+
