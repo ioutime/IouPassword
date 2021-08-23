@@ -5,9 +5,11 @@ import com.ioutime.dao.MySqlDbcpPool;
 import com.ioutime.entity.User;
 import com.ioutime.entity.UserMsg;
 
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Base64;
 
 /**
  * @author ioutime
@@ -70,7 +72,7 @@ public class Select {
             int i = 1;
             while (resultSet.next()){
                 int id = resultSet.getInt("id");
-                String notes1  = resultSet.getString("notes");
+                String notes1 = Base64.getEncoder().encodeToString(resultSet.getString("notes").getBytes(StandardCharsets.UTF_8));
                 String msg = resultSet.getString("msg");
                 UserMsg userMsg = new UserMsg();
                 userMsg.setId(id);

@@ -13,6 +13,5 @@ public class StartThread extends Thread{
     @Override
     public void run() {
         new MySqlDbcpPool();
-        System.out.println("开启数据库连接池");
     }
 }

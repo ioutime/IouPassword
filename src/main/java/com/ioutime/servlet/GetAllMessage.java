@@ -36,7 +36,6 @@ public class GetAllMessage extends HttpServlet {
                 RespBody.response(resp,"200","查询成功",jsonObject);
                 System.out.println("查询成功");
             } catch (SQLException | ClassNotFoundException e) {
-                e.printStackTrace();
                 RespBody.response(resp,"400","查询失败","");
                 System.out.println("查询失败");
             }
