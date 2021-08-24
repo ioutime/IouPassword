@@ -7,11 +7,12 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.ioutime.dao.MySqlDbcpPool;
+import org.apache.commons.dbcp.BasicDataSourceFactory;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 /**
  * @author ioutime
@@ -20,8 +21,20 @@ import java.util.Map;
  */
 
 public class JwtUtil {
-    //私钥
-    private static final String SIGN = "!@#$%^&";
+
+    public static String SIGN = "";
+
+    static {
+        Properties properties = new Properties();
+        InputStream stream = MySqlDbcpPool.class.getClassLoader().getResourceAsStream("jwt.properties");
+        try {
+            properties.load(stream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        SIGN = properties.getProperty("SIGN");
+    }
+
     /**
      *生成token
      */
