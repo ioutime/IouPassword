@@ -14,7 +14,7 @@
 
 项目结构：
 ```text
-   srv
+   src
     └─main
         ├─java
         │  └─com
