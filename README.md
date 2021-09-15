@@ -12,3 +12,22 @@
 
 前端使用的[Java编写的控制台小程序](https://github.com/ioutime/ioupasswd-consoleApp)
 
+项目结构：
+```text
+   srv
+    └─main
+        ├─java
+        │  └─com
+        │      └─ioutime
+        │          ├─dao
+        │          │  └─user
+        │          ├─entity
+        │          ├─filter
+        │          ├─result
+        │          ├─servlet
+        │          └─util
+        ├─resources
+        └─webapp
+            └─WEB-INF
+```
+

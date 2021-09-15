@@ -2,3 +2,4 @@
 target
 dbcp.properties
 redis.properties
+jwt.properties
